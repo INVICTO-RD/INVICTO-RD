@@ -11,8 +11,8 @@ Welcome to my GitHub profile! I'm passionate about software development and love
 
 ## 🛠️ Languages and Tools
 
-- **Languages:** [List, e.g., Python, JavaScript, etc.]
-- **Tools:** [List the tools and technologies you work with, e.g., Git, Docker, etc.]
+- **Languages:** [List Python, JavaScript.]
+- **Tools:** [Git, Docker, etc.]
 
 ## 📈 GitHub Stats
 
