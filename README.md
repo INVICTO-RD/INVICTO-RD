@@ -6,12 +6,12 @@ Welcome to my GitHub profile! I'm passionate about software development and love
 
 - 🌱 I’m currently learning **[insert technology or programming language you're learning]**
 - 💬 Ask me about **[insert areas of expertise or topics you enjoy discussing]**
-- 📫 How to reach me: [Your Email or LinkedIn Profile](marcos:invictodelsur@gmail.com)
+- 📫 How to reach me: [invictodelsur@gmail.com](marcos:invictodelsur@gmail.com)
 - ⚡ Fun fact: [Share a fun fact about yourself]
 
 ## 🛠️ Languages and Tools
 
-- **Languages:** [List the programming languages you use, e.g., Python, JavaScript, etc.]
+- **Languages:** [List, e.g., Python, JavaScript, etc.]
 - **Tools:** [List the tools and technologies you work with, e.g., Git, Docker, etc.]
 
 ## 📈 GitHub Stats
