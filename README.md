@@ -4,8 +4,8 @@ Welcome to my GitHub profile! I'm passionate about software development and love
 
 ## 🚀 About Me
 
-- 🌱 I’m currently learning **[insert technology or programming language you're learning]**
-- 💬 Ask me about **[insert areas of expertise or topics you enjoy discussing]**
+- 🌱 I’m currently learning **[]**
+- 💬 Ask me about **[]**
 - 📫 How to reach me: [invictodelsur@gmail.com](marcos:invictodelsur@gmail.com)
 - ⚡ Fun fact: [Share a fun fact about yourself]
 
