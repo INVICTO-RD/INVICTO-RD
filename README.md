@@ -7,7 +7,7 @@ Welcome to my GitHub profile! I'm passionate about software development and love
 - 🌱 I’m currently learning **[]**
 - 💬 Ask me about **[]**
 - 📫 How to reach me: [invictodelsur@gmail.com](marcos:invictodelsur@gmail.com)
-- ⚡ Fun fact: [Share a fun fact about yourself]
+- ⚡ Fun fact: []
 
 ## 🛠️ Languages and Tools
 
