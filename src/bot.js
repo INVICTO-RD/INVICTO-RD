@@ -23,8 +23,10 @@ client.on('message', message => {
         if (listaHoy.length === 0) {
             message.reply('No hay personas en la lista de hoy.');
         } else {
-            const lista = listaHoy.map((persona, index) => `${index + 1}. ${persona.numero} - ${persona.fecha}`).join('\n');
-            message.reply(`Lista de hoy:\n${lista}`);
+            const lista = listaHoy.map((persona, index) => {
+                return `${index + 1}. ${persona.numero} [✅]\nFecha de unión: ${persona.fecha}`;
+            }).join('\n');
+            message.reply(`Lista de hoy:\n${lista}\n\n¿Quieres unirte a la lista? Responde con "Si".`);
         }
     } else if (message.body.toLowerCase() === 'listamñ') {
         if (listaManana.length >= LIMITE_PERSONAS) {
@@ -49,18 +51,26 @@ client.on('message', message => {
         fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
         fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
         message.reply('Todas las listas han sido borradas.');
-    } else {
-        if (listaHoy.length >= LIMITE_PERSONAS) {
-            message.reply('Se logró el límite de personas para hoy. ¿Quieres apuntarte para mañana? Escribe listaMñ.');
+    } else if (message.body.toLowerCase() === 'si') {
+        if (listaHoy.some(persona => persona.numero === message.from)) {
+            message.reply('No puedes ser agregado más de una vez en la lista, espera que el dueño borre la lista de hoy para unirte.');
+        } else if (listaManana.some(persona => persona.numero === message.from)) {
+            message.reply('Estás en la lista de mañana, no puedes unirte a la lista de hoy.');
         } else {
-            const persona = {
-                numero: message.from,
-                fecha: new Date().toLocaleString()
-            };
-            listaHoy.push(persona);
-            fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
-            message.reply('Te has agregado a la lista de hoy.');
+            if (listaHoy.length >= LIMITE_PERSONAS) {
+                message.reply('Se logró el límite de personas para hoy. ¿Quieres apuntarte para mañana? Escribe listaMñ.');
+            } else {
+                const persona = {
+                    numero: message.from,
+                    fecha: new Date().toLocaleString()
+                };
+                listaHoy.push(persona);
+                fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
+                message.reply('Te has agregado a la lista de hoy.');
+            }
         }
+    } else {
+        message.reply('Comando no reconocido. Usa "listahoy", "listamñ", "menúlista" o "borrar lista".');
     }
 });
 
