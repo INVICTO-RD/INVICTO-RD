@@ -2,8 +2,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const chalk = require('chalk');
-
-const ownerNumber = 'YOUR_PHONE_NUMBER'; // Reemplaza con el número del dueño del bot
+const config = require('../config/config.js'); // Importar configuración
 
 const client = new Client({
     authStrategy: new LocalAuth()
@@ -18,11 +17,11 @@ client.on('ready', () => {
 });
 
 client.on('disconnected', (reason) => {
-    console.log('╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☂\n┆ ⚠️ CONEXIÓN PERDIDA CON EL SERVIDOR, RECONECTANDO....\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☂');
+    console.log('Desconectado del servidor, reconectando...');
 });
 
 client.on('authenticated', () => {
-    console.log('╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✓\n┆ 🌸 CONECTANDO AL SERVIDOR...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✓');
+    console.log('Conectado al servidor...');
 });
 
 client.on('message', message => {
@@ -60,7 +59,7 @@ client.on('message', message => {
             message.reply(`Lista de hoy:\n${lista}\n\n¿Quieres unirte a la lista? Responde con "Si".`);
         }
     } else if (content.toLowerCase() === '.listamñ' || content.toLowerCase() === '/listamñ' || content.toLowerCase() === '#listamñ') {
-        if (listaManana.length >= LIMITE_PERSONAS) {
+        if (listaManana.length >= config.LIMITE_PERSONAS) {
             message.reply('El límite de personas para mañana ya está completo.');
         } else {
             message.reply('Por favor, regístrate con un apodo. Ejemplo: /apodo Juan');
@@ -77,7 +76,7 @@ client.on('message', message => {
             fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
             message.reply('Te has agregado a la lista para mañana.');
             // Notificar al dueño del bot
-            client.sendMessage(ownerNumber, `Nuevo usuario agregado a la lista:\nNúmero: ${sender}\nApodo: ${apodo}`);
+            client.sendMessage(config.OWNER_NUMBER, `Nuevo usuario agregado a la lista:\nNúmero: ${sender}\nApodo: ${apodo}`);
         } else {
             message.reply('Formato de apodo no válido. Intenta nuevamente.');
         }
@@ -87,24 +86,32 @@ client.on('message', message => {
 
         message.reply(`Lista de hoy:\n${listaHoyTexto}\n\nLista de mañana:\n${listaMananaTexto}`);
     } else if (content.toLowerCase() === '.borrar lista' || content.toLowerCase() === '/borrar lista' || content.toLowerCase() === '#borrar lista') {
-        listaHoy = [];
-        listaManana = [];
-        fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
-        fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
-        message.reply('Todas las listas han sido borradas.');
+        if (sender === config.OWNER_NUMBER) {
+            listaHoy = [];
+            listaManana = [];
+            fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
+            fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
+            message.reply('Todas las listas han sido borradas.');
+        } else {
+            message.reply('No tienes permisos para borrar la lista.');
+        }
     } else if (content.toLowerCase() === '.borrar lista de hoy' || content.toLowerCase() === '/borrar lista de hoy' || content.toLowerCase() === '#borrar lista de hoy') {
-        listaHoy = listaManana;
-        listaManana = [];
-        fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
-        fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
-        message.reply('La lista de hoy ha sido eliminada. La lista de mañana ahora es la lista de hoy y se ha creado una nueva lista para mañana.');
+        if (sender === config.OWNER_NUMBER) {
+            listaHoy = listaManana;
+            listaManana = [];
+            fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
+            fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
+            message.reply('La lista de hoy ha sido eliminada. La lista de mañana ahora es la lista de hoy y se ha creado una nueva lista para mañana.');
+        } else {
+            message.reply('No tienes permisos para borrar la lista.');
+        }
     } else if (content.toLowerCase() === '.si' || content.toLowerCase() === '/si' || content.toLowerCase() === '#si') {
         if (listaHoy.some(persona => persona.numero === sender)) {
             message.reply('No puedes ser agregado más de una vez en la lista, espera que el dueño borre la lista de hoy para unirte.');
         } else if (listaManana.some(persona => persona.numero === sender)) {
             message.reply('Estás en la lista de mañana, no puedes unirte a la lista de hoy.');
         } else {
-            if (listaHoy.length >= LIMITE_PERSONAS) {
+            if (listaHoy.length >= config.LIMITE_PERSONAS) {
                 message.reply('Se logró el límite de personas para hoy. ¿Quieres apuntarte para mañana? Escribe listaMñ.');
             } else {
                 message.reply('Por favor, regístrate con un apodo. Ejemplo: /apodo Juan');
@@ -115,4 +122,4 @@ client.on('message', message => {
     }
 });
 
-client.initialize();
+client.initialize(); 
