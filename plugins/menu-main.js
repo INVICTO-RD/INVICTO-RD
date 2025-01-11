@@ -9,7 +9,7 @@ function showMenu() {
 
     const menuHeader = `
         <div style="text-align: center;">
-            <img src="URL_DE_LA_FOTO" alt="Foto de perfil" style="width: 100px; height: 100px;">
+            <img src="https://i.postimg.cc/sDKhjV8B/IMG-20250111-WA0042.jpg" alt="Foto de perfil" style="width: 100px; height: 100px;">
             <h2>Menú de Comandos</h2>
         </div>
     `;
