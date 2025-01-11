@@ -3,6 +3,8 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const chalk = require('chalk');
 
+const ownerNumber = 'YOUR_PHONE_NUMBER'; // Reemplaza con el número del dueño del bot
+
 const client = new Client({
     authStrategy: new LocalAuth()
 });
@@ -61,13 +63,23 @@ client.on('message', message => {
         if (listaManana.length >= LIMITE_PERSONAS) {
             message.reply('El límite de personas para mañana ya está completo.');
         } else {
+            message.reply('Por favor, regístrate con un apodo. Ejemplo: /apodo Juan');
+        }
+    } else if (content.toLowerCase().startsWith('/apodo ')) {
+        const apodo = content.substring(7).trim();
+        if (apodo) {
             const persona = {
                 numero: sender,
+                apodo: apodo,
                 fecha: new Date().toLocaleString()
             };
             listaManana.push(persona);
             fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
             message.reply('Te has agregado a la lista para mañana.');
+            // Notificar al dueño del bot
+            client.sendMessage(ownerNumber, `Nuevo usuario agregado a la lista:\nNúmero: ${sender}\nApodo: ${apodo}`);
+        } else {
+            message.reply('Formato de apodo no válido. Intenta nuevamente.');
         }
     } else if (content.toLowerCase() === '.menúlista' || content.toLowerCase() === '/menúlista' || content.toLowerCase() === '#menúlista') {
         const listaHoyTexto = listaHoy.length === 0 ? 'No hay personas en la lista de hoy.' : listaHoy.map((persona, index) => `${index + 1}. ${persona.numero} - ${persona.fecha}`).join('\n');
@@ -95,13 +107,7 @@ client.on('message', message => {
             if (listaHoy.length >= LIMITE_PERSONAS) {
                 message.reply('Se logró el límite de personas para hoy. ¿Quieres apuntarte para mañana? Escribe listaMñ.');
             } else {
-                const persona = {
-                    numero: sender,
-                    fecha: new Date().toLocaleString()
-                };
-                listaHoy.push(persona);
-                fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
-                message.reply('Te has agregado a la lista de hoy.');
+                message.reply('Por favor, regístrate con un apodo. Ejemplo: /apodo Juan');
             }
         }
     } else {
