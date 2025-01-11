@@ -1,3 +1,3 @@
 // imagen.js
-const imageUrl = "URL_DE_LA_FOTO";
+const imageUrl = "https://i.postimg.cc/sDKhjV8B/IMG-20250111-WA0042.jpg";
 module.exports = imageUrl;
