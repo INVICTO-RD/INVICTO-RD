@@ -15,14 +15,14 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    if (message.body.toLowerCase() === 'registrar') {
+    if (message.body.toLowerCase() === '.registrar' || message.body.toLowerCase() === '/registrar' || message.body.toLowerCase() === '#registrar') {
         message.reply('¿Prefieres QR o código? Responde con "QR" o "código".');
-    } else if (message.body.toLowerCase() === 'qr') {
+    } else if (message.body.toLowerCase() === '.qr' || message.body.toLowerCase() === '/qr' || message.body.toLowerCase() === '#qr') {
         client.on('qr', (qr) => {
             qrcode.generate(qr, { small: true });
             message.reply('Escanea este QR para registrarte.');
         });
-    } else if (message.body.toLowerCase() === 'código') {
+    } else if (message.body.toLowerCase() === '.código' || message.body.toLowerCase() === '/código' || message.body.toLowerCase() === '#código') {
         message.reply('Por favor, ingresa tu número de teléfono en el formato +1234567890.');
     } else if (message.body.startsWith('+')) {
         const phoneNumber = message.body.trim();
@@ -31,7 +31,7 @@ client.on('message', message => {
         } else {
             message.reply('Formato de número no válido. Intenta nuevamente.');
         }
-    } else if (message.body.toLowerCase() === 'listahoy') {
+    } else if (message.body.toLowerCase() === '.listahoy' || message.body.toLowerCase() === '/listahoy' || message.body.toLowerCase() === '#listahoy') {
         if (listaHoy.length === 0) {
             message.reply('No hay personas en la lista de hoy.');
         } else {
@@ -40,7 +40,7 @@ client.on('message', message => {
             }).join('\n');
             message.reply(`Lista de hoy:\n${lista}\n\n¿Quieres unirte a la lista? Responde con "Si".`);
         }
-    } else if (message.body.toLowerCase() === 'listamñ') {
+    } else if (message.body.toLowerCase() === '.listamñ' || message.body.toLowerCase() === '/listamñ' || message.body.toLowerCase() === '#listamñ') {
         if (listaManana.length >= LIMITE_PERSONAS) {
             message.reply('El límite de personas para mañana ya está completo.');
         } else {
@@ -52,18 +52,24 @@ client.on('message', message => {
             fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
             message.reply('Te has agregado a la lista para mañana.');
         }
-    } else if (message.body.toLowerCase() === 'menúlista') {
+    } else if (message.body.toLowerCase() === '.menúlista' || message.body.toLowerCase() === '/menúlista' || message.body.toLowerCase() === '#menúlista') {
         const listaHoyTexto = listaHoy.length === 0 ? 'No hay personas en la lista de hoy.' : listaHoy.map((persona, index) => `${index + 1}. ${persona.numero} - ${persona.fecha}`).join('\n');
         const listaMananaTexto = listaManana.length === 0 ? 'No hay personas en la lista de mañana.' : listaManana.map((persona, index) => `${index + 1}. ${persona.numero} - ${persona.fecha}`).join('\n');
 
         message.reply(`Lista de hoy:\n${listaHoyTexto}\n\nLista de mañana:\n${listaMananaTexto}`);
-    } else if (message.body.toLowerCase() === 'borrar lista') {
+    } else if (message.body.toLowerCase() === '.borrar lista' || message.body.toLowerCase() === '/borrar lista' || message.body.toLowerCase() === '#borrar lista') {
         listaHoy = [];
         listaManana = [];
         fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
         fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
         message.reply('Todas las listas han sido borradas.');
-    } else if (message.body.toLowerCase() === 'si') {
+    } else if (message.body.toLowerCase() === '.borrar lista de hoy' || message.body.toLowerCase() === '/borrar lista de hoy' || message.body.toLowerCase() === '#borrar lista de hoy') {
+        listaHoy = listaManana;
+        listaManana = [];
+        fs.writeFileSync('./data/listaHoy.json', JSON.stringify(listaHoy));
+        fs.writeFileSync('./data/listaManana.json', JSON.stringify(listaManana));
+        message.reply('La lista de hoy ha sido eliminada. La lista de mañana ahora es la lista de hoy y se ha creado una nueva lista para mañana.');
+    } else if (message.body.toLowerCase() === '.si' || message.body.toLowerCase() === '/si' || message.body.toLowerCase() === '#si') {
         if (listaHoy.some(persona => persona.numero === message.from)) {
             message.reply('No puedes ser agregado más de una vez en la lista, espera que el dueño borre la lista de hoy para unirte.');
         } else if (listaManana.some(persona => persona.numero === message.from)) {
@@ -82,7 +88,7 @@ client.on('message', message => {
             }
         }
     } else {
-        message.reply('Comando no reconocido. Usa "listahoy", "listamñ", "menúlista" o "borrar lista".');
+        message.reply('Comando no reconocido. Usa ".listahoy", ".listamñ", ".menúlista", ".borrar lista" o ".borrar lista de hoy".');
     }
 });
 
